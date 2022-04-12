@@ -1,19 +1,40 @@
 
 
 def analyze(data):
-    return data
+    feasible = True
+    for i  in range(len(data)):
+        if data[i]["latness"] > 0:
+            feasible  = False
+            break
     
+    return data, feasible
+
 
 def edf(data):
-    arrival_time = []
-    indx = 0
-    for i in data:
-        arrival_time.append([i['at'], i['id'],indx])
-        indx +=1
-    arrival_time.sort()
+    unsortedTasks = data.values()
+    print(unsortedTasks)
+    unsortedTasks = sorted(unsortedTasks, key = lambda i: i['dt'])
+    print(unsortedTasks)
+    sortedTasks = []
     curr_time = 0
-    for val in arrival_time:
-        pass
+    while unsortedTasks:
+        n = 0
+        while n < len(unsortedTasks):
+            bestTask = unsortedTasks[n]
+            if bestTask["at"] <= curr_time:
+                break
+            n +=1
+        if bestTask["at"] > curr_time:
+            curr_time = bestTask["at"]
+        print(bestTask , curr_time)
+        bestTask["st"] = curr_time
+        curr_time += bestTask['bt']
+        bestTask["ct"] = curr_time
+        bestTask["latness"] =  bestTask["at"] - curr_time
+        sortedTasks.append(bestTask)
+        unsortedTasks.pop(unsortedTasks.index(bestTask))
+    return sortedTasks
+    
 
 def ce(data):
     pass   
@@ -73,18 +94,20 @@ def edd(data):
     sortedTasks = []
     processed = 0
     curr_time = 0
-    for i in range(1,len(unsortedTasks)+1):
-        bestTask = unsortedTasks[str(i)]
+    for i in range(len(unsortedTasks)):
+        bestTask = unsortedTasks[list(unsortedTasks.keys())[0]]
         bestMdd = edd_helper(processed, bestTask)
-        for task in unsortedTasks:
+        for task in list(unsortedTasks):
             mdd = edd_helper(processed, unsortedTasks[task])
             if mdd < bestMdd:
                 bestMdd = mdd
                 bestTask = unsortedTasks[task]
+        bestTask["st"] = curr_time
         curr_time += bestTask['bt']
         bestTask["ct"] = curr_time
+        bestTask["latness"] =  bestTask["at"] - curr_time
         sortedTasks.append(bestTask)
-        del unsortedTasks[bestTask["id"]]
+        del unsortedTasks[str(bestTask["id"])]
     return sortedTasks
     
 

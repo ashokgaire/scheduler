@@ -20,10 +20,10 @@ def main():
     if txt == '6':
         res = algos[txt](data, int(tq))
     else:
-        print("data",data)
+        print(txt,algos[txt])
         res = algos[txt](data)
-    avg = analyze(res)
+    avg,feasible = analyze(res)
     data_f = open('data.json', 'w')
     data_f.write(json.dumps(res))
     data_f.close()
-    return avg
+    return avg, feasible

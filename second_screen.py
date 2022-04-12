@@ -34,6 +34,8 @@ def sec_main():
                 dct['id'] = buttons[i][0].get()
                 dct['at'] = int(buttons[i+1][0].get())
                 dct['bt'] = int(buttons[i+2][0].get())
+                if txt==2:
+                    dct['dt'] = int(buttons[i+2][0].get())
             except:
                 valid[0] = False
             else:
@@ -75,6 +77,8 @@ def sec_main():
             b.grid(row=0, column=1)
         else:
             b = Label(newwin, text="Arrival Time")
+            b.grid(row=0, column=1)
+            b = Label(newwin, text="DeadLine")
             b.grid(row=0, column=1)
         b = Label(newwin, text="worst-case computation Time")
         b.grid(row=0, column=2)
